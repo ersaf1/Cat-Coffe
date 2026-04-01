@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cat Caffe — A cozy premium coffee shop with subtle cat-themed elements. Brewed with love, served with purrfection.">
+  <title>Cat Caffe — Brewed with Love</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐱%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="nav-logo">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 8 L4 2 L12 6 Z" />
+          <path d="M32 8 L36 2 L28 6 Z" />
+          <ellipse cx="20" cy="22" rx="14" ry="13" />
+          <circle cx="14" cy="19" r="2" fill="#3E2723"/>
+          <circle cx="26" cy="19" r="2" fill="#3E2723"/>
+          <ellipse cx="20" cy="24" rx="2.5" ry="1.5" fill="#D4A373"/>
+          <path d="M17.5 24 Q20 28 22.5 24" stroke="#3E2723" stroke-width="1" fill="none"/>
+          <line x1="6" y1="22" x2="1" y2="20" stroke="currentColor" stroke-width="0.8"/>
+          <line x1="6" y1="24" x2="1" y2="25" stroke="currentColor" stroke-width="0.8"/>
+          <line x1="34" y1="22" x2="39" y2="20" stroke="currentColor" stroke-width="0.8"/>
+          <line x1="34" y1="24" x2="39" y2="25" stroke="currentColor" stroke-width="0.8"/>
+        </svg>
+        <span class="nav-logo-text">Cat <span>Caffe</span></span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="nav-cart-btn" id="cartToggle" aria-label="Open cart">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/>
+          </svg>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </button>
+        <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO SECTION ============ -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+          Premium Cat-Friendly Café
+        </div>
+        <h1>Brewed with Love,<br>Served with <span class="highlight">Purrfection</span></h1>
+        <p>Step into our cozy haven where every sip tells a story. Handcrafted coffee, warm vibes, and the subtle charm of feline elegance — all in one cup.</p>
+        <div class="hero-buttons">
+          <a href="#menu" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.06 22.99h1.66c.84 0 1.53-.64 1.63-1.46L23 5.05h-5V1h-1.97v4.05h-4.97l.3 2.34c1.71.47 3.31 1.32 4.27 2.26 1.44 1.42 2.43 2.89 2.43 5.29v8.05zM1 21.99V21h15.03v.99c0 .55-.45 1-1.01 1H2.01c-.56 0-1.01-.45-1.01-1zm15.03-7c0-4.83-5.05-7.04-8.54-7.98l1.13 8.98H1v-1c0-3.52 3.42-5.85 6.63-6.85L7 3h2l.67 5.32C12.84 9.33 16.03 11.63 16.03 14.99z"/></svg>
+            Order Now
+          </a>
+          <a href="#menu" class="btn btn-secondary">View Menu</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="hero-image-wrapper">
+          <div class="hero-image-ring"></div>
+          <img src="assets/hero-coffee.png" alt="Premium latte art coffee at Cat Caffe">
+          <div class="hero-float-card card-1">
+            <div class="card-icon">☕</div>
+            <div class="card-text">Premium Blend<span>100% Arabica</span></div>
+          </div>
+          <div class="hero-float-card card-2">
+            <div class="card-icon">🐾</div>
+            <div class="card-text">Cat Approved<span>Cozy & Warm</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Decorative cat silhouette -->
+    <svg class="hero-cat-silhouette" viewBox="0 0 200 200" fill="currentColor" opacity="0.04">
+      <path d="M40 40 L20 10 L60 30 Z"/>
+      <path d="M160 40 L180 10 L140 30 Z"/>
+      <ellipse cx="100" cy="110" rx="70" ry="65"/>
+      <ellipse cx="70" cy="170" rx="20" ry="25"/>
+      <ellipse cx="130" cy="170" rx="20" ry="25"/>
+      <path d="M160 110 Q200 100 190 140 Q180 160 160 140" />
+    </svg>
+  </section>
+
+  <!-- ============ MENU SECTION ============ -->
+  <section class="menu-section" id="menu">
+    <div class="container">
+      <h2 class="section-title reveal">Our Menu</h2>
+      <p class="section-subtitle reveal">Carefully crafted beverages and treats to brighten your day</p>
+
+      <!-- Category Filter -->
+      <div class="category-filter reveal" id="categoryFilter">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="coffee">Coffee</button>
+        <button class="category-btn" data-category="non-coffee">Non-Coffee</button>
+        <button class="category-btn" data-category="food">Food</button>
+      </div>
+
+      <!-- Menu Grid -->
+      <div class="menu-grid" id="menuGrid">
+        <!-- Cards are injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CART SIDEBAR ============ -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--bg-dark-roast)" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        Your Cart
+      </h3>
+      <button class="cart-close-btn" id="cartClose" aria-label="Close cart">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty" id="cartEmpty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+        <p>Your cart is empty</p>
+        <span style="font-size:0.8rem;color:var(--text-secondary)">Add some delicious items!</span>
+      </div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-total">
+        <span class="cart-total-label">Total</span>
+        <span class="cart-total-value" id="cartTotal">Rp 0</span>
+      </div>
+      <button class="cart-checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+    </div>
+  </aside>
+
+  <!-- ============ CHECKOUT MODAL ============ -->
+  <div class="checkout-overlay" id="checkoutOverlay">
+    <div class="checkout-modal" style="position:relative;">
+      <button class="checkout-close-btn" id="checkoutClose" aria-label="Close checkout">✕</button>
+      <h3>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--bg-dark-roast)" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Checkout
+      </h3>
+      <div class="checkout-summary" id="checkoutSummary">
+        <!-- Injected by JS -->
+      </div>
+      <div class="checkout-qris">
+        <div class="checkout-qris-label">Scan to Pay (QRIS)</div>
+        <div class="checkout-qris-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="4" height="4" rx="0.5"/>
+            <line x1="21" y1="14" x2="21" y2="21"/><line x1="14" y1="21" x2="21" y2="21"/>
+          </svg>
+          <span>QR Code</span>
+        </div>
+        <div class="checkout-qris-note">Open your banking app and scan the QR code above</div>
+      </div>
+      <button class="checkout-confirm-btn" id="confirmPayment">
+        ✓ Confirm Payment
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ ORDER STATUS MODAL ============ -->
+  <div class="order-status-overlay" id="orderStatusOverlay">
+    <div class="order-status-modal">
+      <div class="order-status-icon" id="orderStatusIcon">⏳</div>
+      <h3 id="orderStatusTitle">Processing Your Order</h3>
+      <p id="orderStatusText">Please wait while we prepare your order...</p>
+      <div class="order-status-badge" id="orderStatusBadge">
+        <span id="orderStatusDot">●</span>
+        <span id="orderStatusLabel">Processing</span>
+      </div>
+      <button class="order-status-close-btn" id="orderStatusClose" style="display:none;">Back to Menu</button>
+    </div>
+  </div>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer" id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="nav-logo" style="margin-bottom:4px;">
+            <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="var(--accent-caramel)">
+              <path d="M8 8 L4 2 L12 6 Z"/>
+              <path d="M32 8 L36 2 L28 6 Z"/>
+              <ellipse cx="20" cy="22" rx="14" ry="13"/>
+              <circle cx="14" cy="19" r="2" fill="#3E2723"/>
+              <circle cx="26" cy="19" r="2" fill="#3E2723"/>
+              <ellipse cx="20" cy="24" rx="2.5" ry="1.5" fill="#D4A373"/>
+            </svg>
+            <span class="nav-logo-text">Cat <span>Caffe</span></span>
+          </a>
+          <p class="footer-brand-desc">A cozy premium coffee shop where handcrafted beverages meet the subtle charm of feline elegance. Every cup is brewed with love.</p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Hours</h4>
+          <ul>
+            <li><a href="#">Mon–Fri: 7AM – 9PM</a></li>
+            <li><a href="#">Saturday: 8AM – 10PM</a></li>
+            <li><a href="#">Sunday: 8AM – 8PM</a></li>
+          </ul>
+        </div>
+        <div id="about">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="#">Jl. Kopi Kucing No. 42</a></li>
+            <li><a href="#">Jakarta, Indonesia</a></li>
+            <li><a href="tel:+6281234567890">+62 812-3456-7890</a></li>
+            <li><a href="mailto:hello@catcaffe.id">hello@catcaffe.id</a></li>
+          </ul>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" aria-label="Twitter">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+            </a>
+            <a href="#" aria-label="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Cat Caffe. All rights reserved.</span>
+        <span>Made with ☕ & 🐾</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ TOAST CONTAINER ============ -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
