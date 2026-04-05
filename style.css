@@ -680,16 +680,22 @@ button {
   letter-spacing: 0.3px;
 }
 
-.menu-card-add-btn svg {
+.menu-card-add-btn svg,
+.menu-card-add-btn img {
   width: 14px;
   height: 14px;
   fill: currentColor;
+  filter: invert(1); /* Assuming default text is light and img is black */
 }
 
 .menu-card-add-btn:hover {
   background: var(--accent-caramel);
   color: var(--bg-dark-roast);
   transform: scale(1.05);
+}
+
+.menu-card-add-btn:hover img {
+  filter: invert(0); /* Make it black on hover to match dark-roast color */
 }
 
 .menu-card-add-btn:active {

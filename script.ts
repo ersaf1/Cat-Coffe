@@ -1,118 +1,25 @@
+import { supabase } from './src/lib/supabase';
+
   /* ============================================
    CAT CAFFE — Application Logic
    ============================================ */
 
 // ========== MENU DATA ==========
-const menuData: MenuItem[] = [
-  {
-    id: 1,
-    name: "Caramel Latte",
-    desc: "Smooth espresso with creamy caramel and steamed milk",
-    price: 32000,
-    category: "coffee",
-    image: "assets/hero-coffee.png",
-    badge: "Best Seller"
-  },
-  {
-    id: 2,
-    name: "Classic Espresso",
-    desc: "Bold and rich double-shot espresso, perfectly extracted",
-    price: 22000,
-    category: "coffee",
-    image: "assets/espresso.png",
-    badge: null
-  },
-  {
-    id: 3,
-    name: "Cappuccino",
-    desc: "Velvety foam over rich espresso with a touch of cocoa",
-    price: 28000,
-    category: "coffee",
-    image: "assets/cappuccino.png",
-    badge: null
-  },
-  {
-    id: 4,
-    name: "Matcha Latte",
-    desc: "Premium Japanese matcha blended with creamy oat milk",
-    price: 35000,
-    category: "non-coffee",
-    image: "assets/matcha-latte.png",
-    badge: "Popular"
-  },
-  {
-    id: 5,
-    name: "Cold Brew",
-    desc: "24-hour steeped cold brew, smooth and refreshing",
-    price: 30000,
-    category: "coffee",
-    image: "assets/cold-brew.png",
-    badge: null
-  },
-  {
-    id: 6,
-    name: "Café Mocha",
-    desc: "Espresso meets rich Belgian chocolate and whipped cream",
-    price: 34000,
-    category: "coffee",
-    image: "assets/mocha.png",
-    badge: null
-  },
-  {
-    id: 7,
-    name: "Butter Croissant",
-    desc: "Flaky, golden croissant baked fresh every morning",
-    price: 18000,
-    category: "food",
-    image: "assets/croissant.png",
-    badge: "Fresh"
-  },
-  {
-    id: 8,
-    name: "Honey Americano",
-    desc: "Classic Americano sweetened with natural wildflower honey",
-    price: 26000,
-    category: "coffee",
-    image: "assets/espresso.png",
-    badge: null
-  },
-  {
-    id: 9,
-    name: "Vanilla Iced Latte",
-    desc: "Chilled latte with Madagascar vanilla bean syrup",
-    price: 33000,
-    category: "coffee",
-    image: "assets/cold-brew.png",
-    badge: null
-  },
-  {
-    id: 10,
-    name: "Chocolate Croissant",
-    desc: "Buttery pastry filled with premium dark chocolate",
-    price: 22000,
-    category: "food",
-    image: "assets/croissant.png",
-    badge: null
-  },
-  {
-    id: 11,
-    name: "Strawberry Smoothie",
-    desc: "Fresh strawberries blended with yogurt and honey",
-    price: 30000,
-    category: "non-coffee",
-    image: "assets/matcha-latte.png",
-    badge: null
-  },
-  {
-    id: 12,
-    name: "Affogato",
-    desc: "Vanilla gelato drowned in a shot of hot espresso",
-    price: 36000,
-    category: "coffee",
-    image: "assets/mocha.png",
-    badge: "Chef's Pick"
+let menuData: MenuItem[] = [];
+
+// ========== FETCH DATA DARI DATABASE ==========
+async function fetchMenu() {
+  try {
+    const { data, error } = await supabase.from('menu_items').select('*');
+    if (error) throw error;
+    
+    menuData = data || [];
+    renderMenu();
+  } catch (error) {
+    console.error('Error fetching from Supabase:', error);
+    showToast('Failed to load menu from server');
   }
-];
+}
 
 // ========== INTERFACES ==========
 interface MenuItem {
@@ -168,7 +75,7 @@ function formatPrice(price: number) {
 }
 
 // Paw SVG icon
-const pawIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18c-2.21 0-4-1.79-4-4 0-1.66.68-3.21 1.76-4.24C10.83 8.72 11.4 8.5 12 8.5s1.17.22 1.76.76C14.84 10.29 15.52 11.34 15.52 14c0 2.21-1.57 4-3.52 4zM7.5 12.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM16.5 12.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 7.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM15 7.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>`;
+const pawIcon = `<img src="https://img.icons8.com/?size=100&id=9199&format=png&color=000000" alt="cat paw icon" />`;
 
 // ========== RENDER MENU ==========
 function renderMenu(category: string = 'all') {
@@ -271,6 +178,9 @@ function updateQty(id: number, delta: number) {
   }
   updateCartUI();
 }
+
+// Expose these to window so that the inline onclick handlers in updateCartUI work
+Object.assign(window, { updateQty, removeFromCart });
 
 function getCartTotal() {
   return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -379,7 +289,7 @@ checkoutOverlay.addEventListener('click', (e) => {
 });
 
 // ========== CONFIRM PAYMENT ==========
-confirmPayment.addEventListener('click', () => {
+confirmPayment.addEventListener('click', async () => {
   checkoutOverlay.classList.remove('open');
 
   // Show processing
@@ -392,20 +302,57 @@ confirmPayment.addEventListener('click', () => {
   orderStatusClose.style.display = 'none';
   orderStatusOverlay.classList.add('open');
 
-  // Simulate processing
-  setTimeout(() => {
+  try {
+    const orderTotal = getCartTotal();
+
+    // 1. Insert ke tabel orders
+    const { data: orderData, error: orderError } = await supabase
+      .from('orders')
+      .insert([{ total_amount: orderTotal, status: 'Processing' }])
+      .select('id')
+      .single();
+
+    if (orderError) throw orderError;
+    const orderId = orderData.id;
+
+    // 2. Siapkan data item pesanan
+    const orderItems = cart.map(item => ({
+      order_id: orderId,
+      menu_item_id: item.id,
+      quantity: item.qty,
+      price: item.price
+    }));
+
+    // 3. Insert ke tabel order_items
+    const { error: itemsError } = await supabase
+      .from('order_items')
+      .insert(orderItems);
+
+    if (itemsError) throw itemsError;
+      
+    // Sukses order
+    console.log('Order sukses:', orderId);
+    
     orderStatusIcon.className = 'order-status-icon completed';
     orderStatusIcon.textContent = '✓';
     orderStatusTitle.textContent = 'Order Completed!';
     orderStatusText.textContent = 'Your order is ready. Thank you for choosing Cat Caffe!';
     orderStatusBadge.className = 'order-status-badge completed';
     orderStatusLabel.textContent = 'Completed';
-    orderStatusClose.style.display = 'inline-flex';
+    orderStatusClose.style.display = 'block';
 
     // Clear cart
     cart = [];
     updateCartUI();
-  }, 3000);
+
+  } catch (error) {
+    console.error('Error submitting order to Supabase:', error);
+    orderStatusIcon.className = 'order-status-icon processing';
+    orderStatusIcon.textContent = '✖';
+    orderStatusTitle.textContent = 'Order Failed!';
+    orderStatusText.textContent = 'Please try again later.';
+    orderStatusClose.style.display = 'block';
+  }
 });
 
 orderStatusClose.addEventListener('click', () => {
@@ -480,4 +427,19 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ========== INIT ==========
-renderMenu();
+fetchMenu();
+
+// ========== CHECK AUTH ==========
+const authLink = document.getElementById('authLink');
+if (authLink) {
+  const userStr = localStorage.getItem('user');
+  if (userStr) {
+    const user = JSON.parse(userStr);
+    authLink.innerHTML = `<a href="#" id="logoutBtn" style="color: var(--accent-caramel);">Hi, ${user.username} (Logout)</a>`;
+    document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      localStorage.removeItem('user');
+      window.location.reload();
+    });
+  }
+}

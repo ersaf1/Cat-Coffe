@@ -150,7 +150,7 @@ function formatPrice(price) {
     return 'Rp ' + price.toLocaleString('id-ID');
 }
 // Paw SVG icon
-const pawIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18c-2.21 0-4-1.79-4-4 0-1.66.68-3.21 1.76-4.24C10.83 8.72 11.4 8.5 12 8.5s1.17.22 1.76.76C14.84 10.29 15.52 11.34 15.52 14c0 2.21-1.57 4-3.52 4zM7.5 12.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM16.5 12.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 7.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM15 7.5c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>`;
+const pawIcon = `<img src="https://img.icons8.com/?size=100&id=9199&format=png&color=000000" alt="cat paw icon" />`;
 // ========== RENDER MENU ==========
 function renderMenu(category = 'all') {
     const filtered = category === 'all'
@@ -242,6 +242,10 @@ function updateQty(id, delta) {
     }
     updateCartUI();
 }
+
+// Expose these to window so that the inline onclick handlers in updateCartUI work
+Object.assign(window, { updateQty, removeFromCart });
+
 function getCartTotal() {
     return cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 }
