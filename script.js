@@ -159,22 +159,23 @@ function renderMenu(category = 'all') {
     menuGrid.innerHTML = '';
     filtered.forEach((item, index) => {
         const card = document.createElement('div');
-        card.className = 'menu-card reveal';
+        card.className = 'bg-[#FAF9F6] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex flex-col h-full reveal';
         card.style.animationDelay = `${index * 0.05}s`;
         card.dataset.category = item.category;
         card.innerHTML = `
-      <div class="menu-card-image">
-        <img src="${item.image}" alt="${item.name}" loading="lazy">
-        ${item.badge ? `<span class="menu-card-badge">${item.badge}</span>` : ''}
+      <div class="relative w-full h-48 overflow-hidden group">
+        <img src="${item.image}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500">
+        ${item.badge ? `<span class="absolute top-3 right-3 bg-[#1A1A1A] text-white text-xs font-bold px-2.5 py-1 rounded-full tracking-wide shadow-md">${item.badge}</span>` : ''}
       </div>
-      <div class="menu-card-body">
-        <h3 class="menu-card-name">${item.name}</h3>
-        <p class="menu-card-desc">${item.desc}</p>
-        <div class="menu-card-footer">
-          <span class="menu-card-price">${formatPrice(item.price)}</span>
-          <button class="menu-card-add-btn" data-id="${item.id}" aria-label="Add ${item.name} to cart">
-            ${pawIcon}
-            Add
+      <div class="p-6 flex flex-col flex-grow">
+        <h3 class="font-serif text-xl font-semibold text-[#1A1A1A] mb-2">${item.name}</h3>
+        <p class="text-sm text-[#6B6B6B] leading-relaxed flex-grow mb-4">${item.desc}</p>
+        <div class="flex items-center justify-between mt-auto">
+          <span class="font-semibold text-lg text-[#1A1A1A]">${formatPrice(item.price)}</span>
+          <button class="menu-card-add-btn bg-[#1A1A1A] text-white p-2.5 rounded-full hover:bg-[#C8A27C] hover:scale-105 transition-all duration-300 shadow-md group" data-id="${item.id}" aria-label="Add ${item.name} to cart" title="Add to cart">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:scale-110 transition-transform">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
           </button>
         </div>
       </div>
