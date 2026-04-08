@@ -94,7 +94,6 @@ export default function MenuPage() {
           <div className="hidden md:flex items-center space-x-8 text-sm uppercase tracking-wider font-semibold text-[#2c2c2c]">
             <Link href="/" className="hover:text-[#c8a97e] transition-colors duration-300">Home</Link>
             <Link href="/menu" className="text-[#c8a97e] transition-colors duration-300">Menu</Link>
-            <Link href="/makanan-minuman" className="hover:text-[#c8a97e] transition-colors duration-300">Maknan & Minuman</Link>
             <Link href="#" className="hover:text-[#c8a97e] transition-colors duration-300">About</Link>
           </div>
 
@@ -148,7 +147,7 @@ export default function MenuPage() {
                           <div className="flex items-center inline-flex bg-[#f5f1eb] rounded-full p-1 border border-gray-100">
                             <button onClick={() => decreaseQuantity(item.name)} className="w-6 h-6 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all">-</button>
                             <span className="text-xs font-bold w-6 text-center">{item.quantity}</span>
-                            <button onClick={() => handleAddToCart(item)} className="w-6 h-6 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all">+</button>
+                            <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }} className="w-6 h-6 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all">+</button>
                           </div>
                         </div>
                         <div className="flex flex-col flex-1 items-end justify-between h-full gap-3 shrink-0">
@@ -226,7 +225,7 @@ export default function MenuPage() {
                       <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
                     </div>
                     <button 
-                      onClick={() => handleAddToCart(item)}
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }}
                       className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer group-hover:scale-110 active:scale-95 relative z-20"
                       title="Add to order"
                     >
@@ -254,7 +253,7 @@ export default function MenuPage() {
                       <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
                     </div>
                     <button 
-                      onClick={() => handleAddToCart(item)}
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }}
                       className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer group-hover:scale-110 active:scale-95 relative z-20"
                       title="Add to order"
                     >
@@ -282,7 +281,7 @@ export default function MenuPage() {
                       <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
                     </div>
                     <button 
-                      onClick={() => handleAddToCart(item)}
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }}
                       className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer group-hover:scale-110 active:scale-95 relative z-20"
                       title="Add to order"
                     >

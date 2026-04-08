@@ -101,7 +101,49 @@ export default function CheckoutPage() {
                         <img src={item.image} alt={item.name} className="w-12 h-12 rounded-lg object-cover" />
                         <div>
                           <p className="font-bold text-[#2c2c2c]">{item.name}</p>
-                          <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                          <div className="flex items-center gap-3 mt-1">
+                            <p className="text-xs text-gray-500">Qty:</p>
+                            <div className="flex items-center bg-[#f5f1eb] rounded-full p-0.5 border border-gray-200">
+                              <button 
+                                onClick={() => {
+                                  const newCart = [...cartItems];
+                                  if (newCart[i].quantity > 1) {
+                                    newCart[i].quantity -= 1;
+                                    setCartItems(newCart);
+                                    localStorage.setItem('checkoutCart', JSON.stringify(newCart));
+                                    const newTotal = newCart.reduce((sum, it) => sum + (it.price * it.quantity), 0);
+                                    setTotalPrice(newTotal);
+                                    localStorage.setItem('checkoutTotal', newTotal.toString());
+                                  } else {
+                                    const filtered = newCart.filter((_, index) => index !== i);
+                                    setCartItems(filtered);
+                                    localStorage.setItem('checkoutCart', JSON.stringify(filtered));
+                                    const newTotal = filtered.reduce((sum, it) => sum + (it.price * it.quantity), 0);
+                                    setTotalPrice(newTotal);
+                                    localStorage.setItem('checkoutTotal', newTotal.toString());
+                                  }
+                                }}
+                                className="w-5 h-5 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all text-xs"
+                              >
+                                -
+                              </button>
+                              <span className="text-xs font-bold w-4 text-center text-[#c8a97e]">{item.quantity}</span>
+                              <button 
+                                onClick={() => {
+                                  const newCart = [...cartItems];
+                                  newCart[i].quantity += 1;
+                                  setCartItems(newCart);
+                                  localStorage.setItem('checkoutCart', JSON.stringify(newCart));
+                                  const newTotal = newCart.reduce((sum, it) => sum + (it.price * it.quantity), 0);
+                                  setTotalPrice(newTotal);
+                                  localStorage.setItem('checkoutTotal', newTotal.toString());
+                                }}
+                                className="w-5 h-5 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all text-xs"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <span className="font-bold text-[#c8a97e]">Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
@@ -162,10 +204,8 @@ export default function CheckoutPage() {
                   <div className="animate-fade-in w-full flex flex-col items-center">
                     <p className="text-sm font-bold text-gray-600 mb-4 uppercase tracking-widest">Scan to Pay</p>
                     <div className="bg-white p-4 rounded-xl shadow-sm mb-4">
-                      {/* Fake QR Image placeholder with SVG */}
-                      <svg viewBox="0 0 100 100" className="w-48 h-48 text-[#2c2c2c]" fill="currentColor">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M10 10h30v30H10V10z M20 20h10v10H20V20z M60 10h30v30H60V10z M70 20h10v10H70V20z M10 60h30v30H10V60z M20 70h10v10H20V70z M60 60h10v10H60V60z M60 80h10v10H60V80z M80 60h10v10H80V60z M50 10h10v10H50V10z M50 30h10v10H50V30z M50 50h10v10H50V50z M50 70h10v20H50V70z M10 50h30v10H10V50z M30 80h10v10H30V80z M80 80h10v10H80V80z M70 50h20v10H70V50z" />
-                      </svg>
+                      {/* Actual QRIS Image */}
+                      <img src="/qris.jpg" alt="QRIS Ersaf Targaryen Cafe" className="w-[18rem] h-auto object-contain rounded-lg shadow-sm" />
                     </div>
                     <p className="text-xs text-gray-500">Supports all major banks and e-wallets.</p>
                   </div>

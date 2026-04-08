@@ -45,7 +45,6 @@ const Navbar = () => {
       <div className="hidden md:flex items-center space-x-8 text-sm uppercase tracking-wider font-semibold text-[#2c2c2c]">
         <Link href="/" className="text-[#c8a97e] transition-colors duration-300">Home</Link>
         <Link href="/menu" className="hover:text-[#c8a97e] transition-colors duration-300">Menu</Link>
-        <Link href="/makanan-minuman" className="hover:text-[#c8a97e] transition-colors duration-300">Maknan & Minuman</Link>
         <Link href="#" className="hover:text-[#c8a97e] transition-colors duration-300">About</Link>
       </div>
 
@@ -120,9 +119,9 @@ export default function LandingPage() {
               </p>
               
               <div className="pt-4">
-                <Button onClick={() => {
-                  router.push('/menu');
-                }}>Explore Our Menu</Button>
+                <Link href="/menu">
+                  <Button>Explore Our Menu</Button>
+                </Link>
               </div>
             </div>
 
