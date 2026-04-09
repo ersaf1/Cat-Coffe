@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Playfair_Display, Inter } from 'next/font/google';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,15 @@ export default function MenuPage() {
   const [cartItems, setCartItems] = useState<{ name: string; price: number; quantity: number; image: string }[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const formatPrice = (price: number) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -114,7 +123,10 @@ export default function MenuPage() {
       return [...prev, { name: item.name, price: item.price, image: item.image || '', quantity: 1 }];
     });
     setToastMessage(`${item.name} berhasil ditambahkan!`);
-    setTimeout(() => setToastMessage(null), 3000);
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+    }
+    toastTimeoutRef.current = setTimeout(() => setToastMessage(null), 3000);
   };
 
   const decreaseQuantity = (name: string) => {
@@ -163,14 +175,14 @@ export default function MenuPage() {
             <button 
               type="button" 
               onClick={() => setIsCartOpen(!isCartOpen)}
-              className="relative flex items-center gap-2 px-5 py-2.5 bg-white/40 backdrop-blur-sm border border-gray-200 rounded-full hover:bg-white hover:shadow-sm transition-all duration-300 cursor-pointer"
+              className="relative flex items-center gap-2 px-5 py-2.5 bg-white/80 backdrop-blur-sm border border-[#d8c9b4] rounded-full hover:bg-white hover:shadow-md transition-all duration-300 cursor-pointer"
             >
               <svg className="w-5 h-5 text-[#2c2c2c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               <span className="font-semibold text-[#2c2c2c] text-sm hidden sm:inline-block">Rp {formatPrice(cartTotalPrice)}</span>
               {cartTotalQty > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#c8a97e] text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#c8a97e] text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center ring-2 ring-[#f5f1eb]">
                   {cartTotalQty}
                 </span>
               )}
@@ -178,45 +190,48 @@ export default function MenuPage() {
 
             {/* Cart Dropdown */}
             {isCartOpen && (
-              <div className="absolute top-14 right-0 w-[360px] bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 z-50 animate-fade-in origin-top-right">
-                <div className="flex items-center justify-between mb-4 border-b pb-4 border-gray-100">
-                  <h3 className="font-serif text-xl font-bold text-[#2c2c2c]">Your Order</h3>
-                  <span className="bg-[#f5f1eb] text-[#c8a97e] text-xs font-bold px-2 py-1 rounded-md">{cartTotalQty} items</span>
+              <div className="absolute top-14 right-0 w-[min(92vw,390px)] bg-gradient-to-b from-white to-[#faf7f2] rounded-3xl shadow-[0_30px_80px_-25px_rgba(58,42,27,0.45)] border border-[#e9dfd1] p-5 sm:p-6 z-50 animate-fade-in origin-top-right">
+                <div className="flex items-center justify-between mb-4 border-b border-[#e7ddd0] pb-4">
+                  <div>
+                    <h3 className="font-serif text-3xl font-bold leading-none text-[#2c2c2c]">Your Order</h3>
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#9a8e7d] mt-2">Freshly selected</p>
+                  </div>
+                  <span className="bg-[#efe7db] text-[#a8855e] text-xs font-bold px-3 py-1.5 rounded-xl">{cartTotalQty} items</span>
                 </div>
                 
                 {cartItems.length === 0 ? (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-[#f5f1eb] rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="text-center py-10">
+                    <div className="w-16 h-16 bg-[#f3ebe0] rounded-full flex items-center justify-center mx-auto mb-4">
                       <svg className="w-8 h-8 text-[#c8a97e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                       </svg>
                     </div>
-                    <p className="text-gray-500 font-medium">Your cart is empty</p>
-                    <p className="text-gray-400 text-sm mt-1">Looks like you haven't added any treats yet.</p>
+                    <p className="text-gray-600 font-medium">Your cart is empty</p>
+                    <p className="text-gray-400 text-sm mt-1">Looks like you have not added any treats yet.</p>
                   </div>
                 ) : (
-                  <div className="space-y-5 max-h-[320px] overflow-y-auto mb-4 pr-2 custom-scrollbar">
+                  <div className="space-y-3 max-h-[320px] overflow-y-auto mb-4 pr-1 custom-scrollbar">
                     {cartItems.map((item, i) => (
-                      <div key={i} className="flex gap-4 items-center">
+                      <div key={i} className="relative grid grid-cols-[auto_1fr_auto] gap-3 items-center rounded-2xl bg-white/85 border border-[#efe5d9] p-3 shadow-[0_8px_25px_-18px_rgba(44,44,44,0.5)]">
+                        <button onClick={() => removeFromCart(item.name)} className="absolute top-2 right-2 text-gray-300 hover:text-red-500 transition-colors p-1" title="Remove">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
                         <img 
                           src={item.image || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=100&q=80'} 
                           alt={item.name} 
                           className="w-16 h-16 rounded-xl object-cover bg-gray-100 shadow-sm shrink-0"
                         />
-                        <div className="flex-1 min-w-0">
+                        <div className="min-w-0 pr-4">
                           <p className="font-bold text-[#2c2c2c] truncate">{item.name}</p>
-                          <p className="text-[#c8a97e] font-serif font-bold text-sm mb-2">Rp {formatPrice(item.price)}</p>
-                          <div className="flex items-center inline-flex bg-[#f5f1eb] rounded-full p-1 border border-gray-100">
+                          <p className="text-[#b5936d] font-serif font-bold text-sm mb-2">Rp {formatPrice(item.price)}</p>
+                          <div className="flex items-center inline-flex bg-[#f4eee5] rounded-full p-1 border border-[#e6ddd0]">
                             <button onClick={() => decreaseQuantity(item.name)} className="w-6 h-6 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all">-</button>
                             <span className="text-xs font-bold w-6 text-center">{item.quantity}</span>
                             <button onClick={() => handleAddToCart(item)} className="w-6 h-6 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all">+</button>
                           </div>
                         </div>
-                        <div className="flex flex-col flex-1 items-end justify-between h-full gap-3 shrink-0">
-                          <button onClick={() => removeFromCart(item.name)} className="text-gray-300 hover:text-red-500 transition-colors p-1" title="Remove">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                          </button>
-                          <span className="font-bold text-[#2c2c2c]">Rp {formatPrice(item.quantity * item.price)}</span>
+                        <div className="self-end pb-1">
+                          <span className="font-bold text-2xl text-[#2c2c2c] leading-none">Rp {formatPrice(item.quantity * item.price)}</span>
                         </div>
                       </div>
                     ))}
@@ -225,9 +240,11 @@ export default function MenuPage() {
                 
                 {cartItems.length > 0 && (
                   <>
-                    <div className="border-t border-gray-100 pt-4 flex justify-between items-end mb-6 mt-2">
-                      <span className="font-bold text-gray-500 uppercase tracking-widest text-xs">Total</span>
-                      <span className="font-serif font-bold text-3xl text-[#2c2c2c]">Rp {formatPrice(cartTotalPrice)}</span>
+                    <div className="border-t border-[#e4d8c7] pt-4 mt-2 mb-5">
+                      <div className="flex justify-between items-end bg-[#f4ecdf] rounded-2xl px-4 py-3 border border-[#eadfcd]">
+                        <span className="font-bold text-gray-500 uppercase tracking-widest text-xs">Total</span>
+                        <span className="font-serif font-bold text-5xl leading-none text-[#2c2c2c]">Rp {formatPrice(cartTotalPrice)}</span>
+                      </div>
                     </div>
                     <button 
                       onClick={() => {
@@ -242,7 +259,7 @@ export default function MenuPage() {
                           router.push('/login?redirect=/checkout');
                         }
                       }}
-                      className="w-full bg-[#2c2c2c] text-white py-3.5 rounded-full font-bold hover:bg-black hover:shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2"
+                      className="w-full bg-gradient-to-r from-[#2f2a24] to-[#1f1f1f] text-white py-4 rounded-full font-bold text-xl hover:shadow-[0_12px_30px_-15px_rgba(0,0,0,0.8)] transition-all active:scale-95 flex justify-center items-center gap-2"
                     >
                       Proceed to Checkout
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
