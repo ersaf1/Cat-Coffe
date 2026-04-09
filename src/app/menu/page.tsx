@@ -40,12 +40,70 @@ export default function MenuPage() {
     { name: 'Lemon Tart', price: 65000, desc: 'Zesty lemon curd in a butter shell.', image: 'https://images.unsplash.com/photo-1514517220017-8ce97a34a7b6?w=400&q=80' }
   ];
 
+  const menuMakanan = [
+    { name: 'Nasi Goreng Spesial', price: 45000, desc: 'Nasi goreng dengan telur, sosis, dan suwiran ayam.', image: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80' },
+    { name: 'Spaghetti Carbonara', price: 55000, desc: 'Pasta creamy dengan smoked beef dan keju parmesan.', image: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400&q=80' },
+    { name: 'Ayam Bakar Madu', price: 48000, desc: 'Ayam bakar manis gurih disajikan dengan sambal dan lalapan.', image: 'https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?w=400&q=80' },
+    { name: 'Beef Burger', price: 60000, desc: 'Burger sapi dengan patty tebal, keju slice, dan kentang goreng.', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80' }
+  ];
+
+  const menuMinuman = [
+    { name: 'Kopi Kenangan Mantan', price: 28000, desc: 'Es kopi susu gula aren yang manis dan creamy.', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&q=80' },
+    { name: 'Matcha Latte', price: 35000, desc: 'Perpaduan bubuk teh hijau premium dengan susu segar.', image: 'https://images.unsplash.com/photo-1536420121512-06ce6c10881d?w=400&q=80' },
+    { name: 'Lemon Tea', price: 20000, desc: 'Teh rasa lemon yang segar dan melegakan dahaga.', image: 'https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?w=400&q=80' },
+    { name: 'Red Velvet Blend', price: 38000, desc: 'Minuman blended rasa red velvet dengan whipped cream.', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&q=80' }
+  ];
+
   const lightBitesMenu = [
     { name: 'Avocado Toast', price: 90000, desc: 'Smashed avocado, cherry tomatoes, chili flakes.', image: 'https://images.unsplash.com/photo-1603048297172-c92544798d5e?w=400&q=80' },
     { name: 'Caprese Sandwich', price: 110000, desc: 'Fresh mozzarella, tomato, basil pesto on ciabatta.', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=80' },
     { name: 'Smoked Salmon Bagel', price: 125000, desc: 'Cream cheese, capers, red onion, smoked salmon.', image: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?w=400&q=80' },
     { name: 'Truffle Fries', price: 80000, desc: 'Crispy fries with truffle oil and parmesan cheese.', image: 'https://images.unsplash.com/photo-1576107232684-1279f390859f?w=400&q=80' }
   ];
+
+  const renderMenuItem = (item: { name: string; price: number; desc: string; image?: string }, i: number) => {
+    const cartItem = cartItems.find(cart => cart.name === item.name);
+    const qty = cartItem ? cartItem.quantity : 0;
+
+    return (
+      <div key={i} className="group relative flex flex-col sm:flex-row items-center justify-between animate-fade-in transition-transform duration-300">
+        <div className="w-full sm:pr-8 flex-1 group-hover:translate-x-4 transition-transform duration-300 relative z-10">
+          <div className="flex items-baseline justify-between mb-1">
+            <h4 className="font-bold text-lg text-[#2c2c2c] bg-[#f5f1eb] pr-4 relative z-10">{item.name}</h4>
+            <div className="hidden sm:block flex-1 border-b-2 border-dotted border-gray-300 mx-4 relative top-[-6px]"></div>
+            <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {item.price.toLocaleString('id-ID')}</span>
+          </div>
+          <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
+        </div>
+        <div className="flex items-center min-w-[70px] shrink-0 z-20 justify-end">
+          {qty > 0 ? (
+            <div className="flex items-center bg-[#f5f1eb] rounded-full p-0.5 border border-gray-200">
+              <button 
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); decreaseQuantity(item.name); }}
+                className="w-6 h-6 rounded-full flex items-center justify-center text-gray-500 font-bold hover:bg-white transition-all text-sm"
+              >-</button>
+              <span className="font-bold text-[#c8a97e] w-6 text-center text-sm">{qty}</span>
+              <button 
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }}
+                className="w-6 h-6 rounded-full flex items-center justify-center text-gray-500 font-bold hover:bg-white transition-all text-sm"
+              >+</button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-[#c8a97e] text-lg font-serif">0</span>
+              <button 
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }}
+                className="flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer group-hover:scale-110 active:scale-95"
+                title="Add to order"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const handleAddToCart = (item: { name: string; price: number; image?: string }) => {
     setCartItems(prev => {
@@ -218,24 +276,7 @@ export default function MenuPage() {
               <h3 className="font-serif text-3xl text-[#2c2c2c] mb-8 font-semibold tracking-wide border-b border-[#2c2c2c]/10 pb-4">Coffee</h3>
               <div className="space-y-8 relative">
                 
-                {coffeeMenu.map((item, i) => (
-                  <div key={i} className="group relative flex flex-row items-center justify-between animate-fade-in transition-transform duration-300">
-                    <div className="w-full sm:pr-8 flex-1  transition-transform duration-300 relative z-10">
-                      <div className="flex items-baseline justify-between mb-1">
-                        <h4 className="font-bold text-lg text-[#2c2c2c] bg-[#f5f1eb] pr-4 relative z-10">{item.name}</h4>
-                        <div className="hidden sm:block flex-1 border-b-2 border-dotted border-gray-300 mx-4 relative top-[-6px]"></div>
-                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {formatPrice(item.price)}</span>
-                      </div>
-                      <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
-                    </div>
-                    <button type="button" onClick={() => handleAddToCart(item)}
-                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer hover:scale-105 active:scale-95 relative z-20"
-                      title="Add to order"
-                    >
-                      <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                    </button>
-                  </div>
-                ))}
+                {coffeeMenu.map((item, i) => renderMenuItem(item, i))}
                 
               </div>
             </div>
@@ -245,24 +286,7 @@ export default function MenuPage() {
               <h3 className="font-serif text-3xl text-[#2c2c2c] mb-8 font-semibold tracking-wide border-b border-[#2c2c2c]/10 pb-4">Pastries</h3>
               <div className="space-y-8 relative">
                 
-                {pastryMenu.map((item, i) => (
-                  <div key={i} className="group relative flex flex-row items-center justify-between animate-fade-in transition-transform duration-300">
-                    <div className="w-full sm:pr-8 flex-1  transition-transform duration-300 relative z-10">
-                      <div className="flex items-baseline justify-between mb-1">
-                        <h4 className="font-bold text-lg text-[#2c2c2c] bg-[#f5f1eb] pr-4 relative z-10">{item.name}</h4>
-                        <div className="hidden sm:block flex-1 border-b-2 border-dotted border-gray-300 mx-4 relative top-[-6px]"></div>
-                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {formatPrice(item.price)}</span>
-                      </div>
-                      <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
-                    </div>
-                    <button type="button" onClick={() => handleAddToCart(item)}
-                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer hover:scale-105 active:scale-95 relative z-20"
-                      title="Add to order"
-                    >
-                      <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                    </button>
-                  </div>
-                ))}
+                {pastryMenu.map((item, i) => renderMenuItem(item, i))}
                 
               </div>
             </div>
@@ -272,25 +296,25 @@ export default function MenuPage() {
               <h3 className="font-serif text-3xl text-[#2c2c2c] mb-8 font-semibold tracking-wide border-b border-[#2c2c2c]/10 pb-4">Light Bites</h3>
               <div className="space-y-8 relative">
                 
-                {lightBitesMenu.map((item, i) => (
-                  <div key={i} className="group relative flex flex-row items-center justify-between animate-fade-in transition-transform duration-300">
-                    <div className="w-full sm:pr-8 flex-1  transition-transform duration-300 relative z-10">
-                      <div className="flex items-baseline justify-between mb-1">
-                        <h4 className="font-bold text-lg text-[#2c2c2c] bg-[#f5f1eb] pr-4 relative z-10">{item.name}</h4>
-                        <div className="hidden sm:block flex-1 border-b-2 border-dotted border-gray-300 mx-4 relative top-[-6px]"></div>
-                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {formatPrice(item.price)}</span>
-                      </div>
-                      <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
-                    </div>
-                    <button type="button" onClick={() => handleAddToCart(item)}
-                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer hover:scale-105 active:scale-95 relative z-20"
-                      title="Add to order"
-                    >
-                      <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                    </button>
-                  </div>
-                ))}
+                {lightBitesMenu.map((item, i) => renderMenuItem(item, i))}
                 
+              </div>
+            </div>
+
+
+            {/* Category: Makanan Utama */}
+            <div>
+              <h3 className="font-serif text-3xl text-[#2c2c2c] mb-8 font-semibold tracking-wide border-b border-[#2c2c2c]/10 pb-4">Makanan Utama</h3>
+              <div className="space-y-8 relative">
+                {menuMakanan.map((item, i) => renderMenuItem(item, i))}
+              </div>
+            </div>
+
+            {/* Category: Minuman Segar */}
+            <div>
+              <h3 className="font-serif text-3xl text-[#2c2c2c] mb-8 font-semibold tracking-wide border-b border-[#2c2c2c]/10 pb-4">Minuman Segar</h3>
+              <div className="space-y-8 relative">
+                {menuMinuman.map((item, i) => renderMenuItem(item, i))}
               </div>
             </div>
 
