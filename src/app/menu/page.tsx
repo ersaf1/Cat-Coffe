@@ -15,6 +15,10 @@ export default function MenuPage() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  const formatPrice = (price: number) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   const coffeeMenu = [
     { name: 'Espresso', price: 40000, desc: 'Single origin, deeply roasted.', image: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=400&q=80' },
     { name: 'Pour Over', price: 55000, desc: 'Hand-brewed, seasonal beans.', image: 'https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400&q=80' },
@@ -106,7 +110,7 @@ export default function MenuPage() {
               <svg className="w-5 h-5 text-[#2c2c2c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
-              <span className="font-semibold text-[#2c2c2c] text-sm hidden sm:inline-block">Rp {cartTotalPrice.toLocaleString('id-ID')}</span>
+              <span className="font-semibold text-[#2c2c2c] text-sm hidden sm:inline-block">Rp {formatPrice(cartTotalPrice)}</span>
               {cartTotalQty > 0 && (
                 <span className="absolute -top-1 -right-1 bg-[#c8a97e] text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center">
                   {cartTotalQty}
@@ -143,18 +147,18 @@ export default function MenuPage() {
                         />
                         <div className="flex-1 min-w-0">
                           <p className="font-bold text-[#2c2c2c] truncate">{item.name}</p>
-                          <p className="text-[#c8a97e] font-serif font-bold text-sm mb-2">Rp {item.price.toLocaleString('id-ID')}</p>
+                          <p className="text-[#c8a97e] font-serif font-bold text-sm mb-2">Rp {formatPrice(item.price)}</p>
                           <div className="flex items-center inline-flex bg-[#f5f1eb] rounded-full p-1 border border-gray-100">
                             <button onClick={() => decreaseQuantity(item.name)} className="w-6 h-6 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all">-</button>
                             <span className="text-xs font-bold w-6 text-center">{item.quantity}</span>
-                            <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }} className="w-6 h-6 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all">+</button>
+                            <button onClick={() => handleAddToCart(item)} className="w-6 h-6 rounded-full flex items-center justify-center text-gray-600 hover:bg-white hover:shadow-sm transition-all">+</button>
                           </div>
                         </div>
                         <div className="flex flex-col flex-1 items-end justify-between h-full gap-3 shrink-0">
                           <button onClick={() => removeFromCart(item.name)} className="text-gray-300 hover:text-red-500 transition-colors p-1" title="Remove">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                           </button>
-                          <span className="font-bold text-[#2c2c2c]">Rp {(item.quantity * item.price).toLocaleString('id-ID')}</span>
+                          <span className="font-bold text-[#2c2c2c]">Rp {formatPrice(item.quantity * item.price)}</span>
                         </div>
                       </div>
                     ))}
@@ -165,7 +169,7 @@ export default function MenuPage() {
                   <>
                     <div className="border-t border-gray-100 pt-4 flex justify-between items-end mb-6 mt-2">
                       <span className="font-bold text-gray-500 uppercase tracking-widest text-xs">Total</span>
-                      <span className="font-serif font-bold text-3xl text-[#2c2c2c]">Rp {cartTotalPrice.toLocaleString('id-ID')}</span>
+                      <span className="font-serif font-bold text-3xl text-[#2c2c2c]">Rp {formatPrice(cartTotalPrice)}</span>
                     </div>
                     <button 
                       onClick={() => {
@@ -215,21 +219,20 @@ export default function MenuPage() {
               <div className="space-y-8 relative">
                 
                 {coffeeMenu.map((item, i) => (
-                  <div key={i} className="group relative flex flex-col sm:flex-row items-center justify-between animate-fade-in transition-transform duration-300">
-                    <div className="w-full sm:pr-8 flex-1 group-hover:translate-x-4 transition-transform duration-300 relative z-10">
+                  <div key={i} className="group relative flex flex-row items-center justify-between animate-fade-in transition-transform duration-300">
+                    <div className="w-full sm:pr-8 flex-1  transition-transform duration-300 relative z-10">
                       <div className="flex items-baseline justify-between mb-1">
                         <h4 className="font-bold text-lg text-[#2c2c2c] bg-[#f5f1eb] pr-4 relative z-10">{item.name}</h4>
                         <div className="hidden sm:block flex-1 border-b-2 border-dotted border-gray-300 mx-4 relative top-[-6px]"></div>
-                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {item.price.toLocaleString('id-ID')}</span>
+                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {formatPrice(item.price)}</span>
                       </div>
                       <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
                     </div>
-                    <button 
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }}
-                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer group-hover:scale-110 active:scale-95 relative z-20"
+                    <button type="button" onClick={() => handleAddToCart(item)}
+                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer hover:scale-105 active:scale-95 relative z-20"
                       title="Add to order"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                      <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                     </button>
                   </div>
                 ))}
@@ -243,21 +246,20 @@ export default function MenuPage() {
               <div className="space-y-8 relative">
                 
                 {pastryMenu.map((item, i) => (
-                  <div key={i} className="group relative flex flex-col sm:flex-row items-center justify-between animate-fade-in transition-transform duration-300">
-                    <div className="w-full sm:pr-8 flex-1 group-hover:translate-x-4 transition-transform duration-300 relative z-10">
+                  <div key={i} className="group relative flex flex-row items-center justify-between animate-fade-in transition-transform duration-300">
+                    <div className="w-full sm:pr-8 flex-1  transition-transform duration-300 relative z-10">
                       <div className="flex items-baseline justify-between mb-1">
                         <h4 className="font-bold text-lg text-[#2c2c2c] bg-[#f5f1eb] pr-4 relative z-10">{item.name}</h4>
                         <div className="hidden sm:block flex-1 border-b-2 border-dotted border-gray-300 mx-4 relative top-[-6px]"></div>
-                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {item.price.toLocaleString('id-ID')}</span>
+                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {formatPrice(item.price)}</span>
                       </div>
                       <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
                     </div>
-                    <button 
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }}
-                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer group-hover:scale-110 active:scale-95 relative z-20"
+                    <button type="button" onClick={() => handleAddToCart(item)}
+                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer hover:scale-105 active:scale-95 relative z-20"
                       title="Add to order"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                      <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                     </button>
                   </div>
                 ))}
@@ -271,21 +273,20 @@ export default function MenuPage() {
               <div className="space-y-8 relative">
                 
                 {lightBitesMenu.map((item, i) => (
-                  <div key={i} className="group relative flex flex-col sm:flex-row items-center justify-between animate-fade-in transition-transform duration-300">
-                    <div className="w-full sm:pr-8 flex-1 group-hover:translate-x-4 transition-transform duration-300 relative z-10">
+                  <div key={i} className="group relative flex flex-row items-center justify-between animate-fade-in transition-transform duration-300">
+                    <div className="w-full sm:pr-8 flex-1  transition-transform duration-300 relative z-10">
                       <div className="flex items-baseline justify-between mb-1">
                         <h4 className="font-bold text-lg text-[#2c2c2c] bg-[#f5f1eb] pr-4 relative z-10">{item.name}</h4>
                         <div className="hidden sm:block flex-1 border-b-2 border-dotted border-gray-300 mx-4 relative top-[-6px]"></div>
-                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {item.price.toLocaleString('id-ID')}</span>
+                        <span className="font-serif font-bold text-[#c8a97e] text-lg bg-[#f5f1eb] pl-4 pr-4 relative z-10">Rp {formatPrice(item.price)}</span>
                       </div>
                       <p className="text-gray-500 text-sm mb-4 sm:mb-0">{item.desc}</p>
                     </div>
-                    <button 
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(item); }}
-                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer group-hover:scale-110 active:scale-95 relative z-20"
+                    <button type="button" onClick={() => handleAddToCart(item)}
+                      className="shrink-0 flex items-center justify-center p-2 rounded-full bg-white shadow-sm border border-gray-200 text-[#c8a97e] hover:bg-[#c8a97e] hover:text-white transition-all cursor-pointer hover:scale-105 active:scale-95 relative z-20"
                       title="Add to order"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                      <svg className="w-5 h-5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                     </button>
                   </div>
                 ))}

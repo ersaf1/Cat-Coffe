@@ -17,6 +17,10 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const formatPrice = (price: number) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   useEffect(() => {
     // Check login state
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -33,20 +37,37 @@ export default function CheckoutPage() {
     if (savedTotal) setTotalPrice(parseFloat(savedTotal));
   }, [router]);
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setIsSuccess(true);
-      // Clear cart
-      localStorage.removeItem('checkoutCart');
-      localStorage.removeItem('checkoutTotal');
+    
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: totalPrice,
+          items: cartItems,
+          // Tambahkan email/nama customer jika ada sistem user
+          customerDetails: {
+            givenNames: 'Pelanggan Cat Coffee',
+          }
+        }),
+      });
       
-      // Redirect after showing success
-      setTimeout(() => {
-        router.push('/');
-      }, 3000);
-    }, 2000);
+      const data = await response.json();
+      
+      if (data.invoiceUrl) {
+        // Arahkan ke halaman pembayaran Xendit
+        window.location.href = data.invoiceUrl;
+      } else {
+        alert('Gagal membuat pesanan: ' + (data.error || 'Terjadi kesalahan'));
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      console.error('Error during payment', error);
+      alert('Terjadi kesalahan saat memproses pembayaran');
+      setIsProcessing(false);
+    }
   };
 
   if (isSuccess) {
@@ -146,7 +167,7 @@ export default function CheckoutPage() {
                           </div>
                         </div>
                       </div>
-                      <span className="font-bold text-[#c8a97e]">Rp {(item.price * item.quantity).toLocaleString('id-ID')}</span>
+                      <span className="font-bold text-[#c8a97e]">Rp {formatPrice(item.price * item.quantity)}</span>
                     </div>
                   ))}
                 </div>
@@ -155,16 +176,16 @@ export default function CheckoutPage() {
               <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
                 <div className="flex justify-between items-center text-gray-500">
                   <span>Subtotal</span>
-                  <span>Rp {totalPrice.toLocaleString('id-ID')}</span>
+                  <span>Rp {formatPrice(totalPrice)}</span>
                 </div>
                 <div className="flex justify-between items-center text-gray-500">
                   <span>Tax (10%)</span>
-                  <span>Rp {(totalPrice * 0.1).toLocaleString('id-ID')}</span>
+                  <span>Rp {formatPrice(Math.round(totalPrice * 0.1))}</span>
                 </div>
                 <div className="flex justify-between items-center pt-3 mt-3 border-t border-gray-100">
                   <span className="font-bold text-lg text-[#2c2c2c]">Total to Pay</span>
                   <span className="font-serif font-bold text-3xl text-[#c8a97e]">
-                    Rp {(totalPrice * 1.1).toLocaleString('id-ID')}
+                    Rp {formatPrice(Math.round(totalPrice * 1.1))}
                   </span>
                 </div>
               </div>
