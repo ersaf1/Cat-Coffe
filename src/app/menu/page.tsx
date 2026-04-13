@@ -115,6 +115,21 @@ export default function MenuPage() {
   };
 
   const handleAddToCart = (item: { name: string; price: number; image?: string }) => {
+    // Selalu cek localStorage secara real-time untuk jaga-jaga
+    const loggedIn = typeof window !== 'undefined' && localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (!loggedIn) {
+      setToastMessage('Silakan login terlebih dahulu');
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+      toastTimeoutRef.current = setTimeout(() => {
+        setToastMessage(null);
+        router.push('/login?redirect=/menu');
+      }, 1500);
+      return;
+    }
+
     setCartItems(prev => {
       const existing = prev.find(i => i.name === item.name);
       if (existing) {
@@ -146,6 +161,24 @@ export default function MenuPage() {
   const cartTotalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const cartTotalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
+  const [isClientLoggedIn, setIsClientLoggedIn] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsClientLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+    setUserName(localStorage.getItem('userName'));
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userName');
+    setIsClientLoggedIn(false);
+    setUserName(null);
+    setCartItems([]);
+    setToastMessage('Berhasil logout');
+    setTimeout(() => setToastMessage(null), 2000);
+  };
+
   return (
     <div className={`min-h-screen bg-[#f5f1eb] ${playfair.variable} ${inter.variable} font-sans text-[#2c2c2c] selection:bg-[#c8a97e] selection:text-white`}>
       
@@ -172,6 +205,15 @@ export default function MenuPage() {
           </div>
 
           <div className="flex items-center gap-4 relative">
+            {isClientLoggedIn ? (
+              <button onClick={handleLogout} className="px-4 py-2 text-sm font-semibold border border-[#d8c9b4] text-[#2c2c2c] rounded-full hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-all duration-300">
+                Logout
+              </button>
+            ) : (
+              <Link href="/login?redirect=/menu" className="px-4 py-2 text-sm font-semibold bg-[#2c2c2c] text-[#f5f1eb] rounded-full hover:bg-black transition-all duration-300">
+                Login
+              </Link>
+            )}
             <button 
               type="button" 
               onClick={() => setIsCartOpen(!isCartOpen)}

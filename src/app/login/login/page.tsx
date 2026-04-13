@@ -3,37 +3,16 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setErrorMsg(null);
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    setLoading(false);
-
-    if (error) {
-      setErrorMsg('Gagal Login: ' + error.message);
-      return;
-    }
-
-    // Set local storage for UI state locally alongside Supabase session
+    // Simulate successful login
     localStorage.setItem('isLoggedIn', 'true');
-    const userName = data.user?.user_metadata?.full_name || email.split('@')[0];
-    localStorage.setItem('userName', userName);
+    localStorage.setItem('userName', 'CoffeeLover');
     
     // Redirect logic
     const params = new URLSearchParams(window.location.search);
@@ -68,21 +47,14 @@ export default function LoginPage() {
 
         <div className="bg-[#F5E6CA] rounded-[24px] p-8 shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden">
           <form id="loginForm" onSubmit={handleLogin}>
-            {errorMsg && (
-              <div className="mb-4 bg-red-100 text-red-600 text-sm p-3 rounded-lg border border-red-200">
-                {errorMsg}
-              </div>
-            )}
             <div className="mb-5">
-              <label className="flex justify-between text-[0.85rem] font-semibold text-[#1B1B1B] mb-2" htmlFor="username">Email</label>
+              <label className="flex justify-between text-[0.85rem] font-semibold text-[#1B1B1B] mb-2" htmlFor="username">Email / Username</label>
               <div className="relative">
                 <input 
-                  type="email" 
+                  type="text" 
                   id="username" 
                   className="w-full bg-[#FAF3E0] border-2 border-transparent px-4 py-3.5 rounded-xl font-sans text-[0.95rem] text-[#1B1B1B] box-border transition-all duration-300 focus:outline-none focus:border-[#C69C6D] focus:bg-white placeholder-[#A0A0A0]" 
                   placeholder="hello@example.com" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   required 
                 />
               </div>
@@ -96,8 +68,6 @@ export default function LoginPage() {
                   id="password" 
                   className="w-full bg-[#FAF3E0] border-2 border-transparent px-4 py-3.5 rounded-xl font-sans text-[0.95rem] text-[#1B1B1B] box-border transition-all duration-300 focus:outline-none focus:border-[#C69C6D] focus:bg-white placeholder-[#A0A0A0]" 
                   placeholder="••••••••" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   required 
                 />
                 <button 
@@ -113,8 +83,8 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="w-full bg-[#C69C6D] hover:bg-[#D4A373] disabled:opacity-50 text-white border-none p-4 rounded-full text-base font-semibold cursor-pointer font-sans transition-all duration-300 flex justify-center items-center gap-2 mt-3 shadow-[0_8px_20px_rgba(198,156,109,0.3)]">
-              <span>{loading ? 'Signing In...' : 'Sign In'}</span>
+            <button type="submit" className="w-full bg-[#C69C6D] hover:bg-[#D4A373] text-white border-none p-4 rounded-full text-base font-semibold cursor-pointer font-sans transition-all duration-300 flex justify-center items-center gap-2 mt-3 shadow-[0_8px_20px_rgba(198,156,109,0.3)]">
+              <span>Sign In</span>
             </button>
           </form>
 

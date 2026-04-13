@@ -2,60 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  
-  const router = useRouter();
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setErrorMsg("Password dan Konfirmasi Password tidak sama!");
-      return;
-    }
-    
-    setLoading(true);
-    setErrorMsg(null);
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
-          phone: phone
-        }
-      }
-    });
-
-    setLoading(false);
-
-    if (error) {
-      setErrorMsg('Gagal Registrasi: ' + error.message);
-      return;
-    }
-
-    // Set local storage untuk simpan status UI (seperti implementasi dummy sebelumnya)
-    localStorage.setItem('isLoggedIn', 'true');
-    const userName = fullName || email.split('@')[0];
-    localStorage.setItem('userName', userName);
-    
-    alert('Registrasi berhasil! Silakan tambah pesanan.');
-    router.push('/menu');
-  };
 
   return (
     <div style={{
@@ -83,12 +33,8 @@ export default function RegisterPage() {
         </div>
 
         <div className="bg-[#F5E6CA] rounded-[24px] p-8 shadow-[0_20px_40px_rgba(0,0,0,0.3)] relative overflow-hidden">
-          <form id="registerForm" onSubmit={handleRegister}>
-            {errorMsg && (
-              <div className="mb-4 bg-red-100 text-red-600 text-sm p-3 rounded-lg border border-red-200">
-                {errorMsg}
-              </div>
-            )}
+          <form id="registerForm">
+            
             <div className="mb-5">
               <label className="flex justify-between text-[0.85rem] font-semibold text-[#1B1B1B] mb-2" htmlFor="fullName">Full Name</label>
               <div className="relative">
@@ -97,23 +43,19 @@ export default function RegisterPage() {
                   id="fullName" 
                   className="w-full bg-[#FAF3E0] border-2 border-transparent px-4 py-3.5 rounded-xl font-sans text-[0.95rem] text-[#1B1B1B] box-border transition-all duration-300 focus:outline-none focus:border-[#C69C6D] focus:bg-white placeholder-[#A0A0A0]" 
                   placeholder="John Doe" 
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
                   required 
                 />
               </div>
             </div>
 
             <div className="mb-5">
-              <label className="flex justify-between text-[0.85rem] font-semibold text-[#1B1B1B] mb-2" htmlFor="email">Email</label>
+              <label className="flex justify-between text-[0.85rem] font-semibold text-[#1B1B1B] mb-2" htmlFor="email">Email / Username</label>
               <div className="relative">
                 <input 
-                  type="email" 
+                  type="text" 
                   id="email" 
                   className="w-full bg-[#FAF3E0] border-2 border-transparent px-4 py-3.5 rounded-xl font-sans text-[0.95rem] text-[#1B1B1B] box-border transition-all duration-300 focus:outline-none focus:border-[#C69C6D] focus:bg-white placeholder-[#A0A0A0]" 
                   placeholder="hello@example.com" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   required 
                 />
               </div>
@@ -127,8 +69,6 @@ export default function RegisterPage() {
                   id="phone" 
                   className="w-full bg-[#FAF3E0] border-2 border-transparent px-4 py-3.5 rounded-xl font-sans text-[0.95rem] text-[#1B1B1B] box-border transition-all duration-300 focus:outline-none focus:border-[#C69C6D] focus:bg-white placeholder-[#A0A0A0]" 
                   placeholder="+62 812 3456 7890" 
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
             </div>
@@ -143,8 +83,6 @@ export default function RegisterPage() {
                   placeholder="••••••••" 
                   required 
                   minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                 />
                 <button 
                   type="button" 
@@ -168,8 +106,6 @@ export default function RegisterPage() {
                   className="w-full bg-[#FAF3E0] border-2 border-transparent px-4 py-3.5 rounded-xl font-sans text-[0.95rem] text-[#1B1B1B] box-border transition-all duration-300 focus:outline-none focus:border-[#C69C6D] focus:bg-white placeholder-[#A0A0A0]" 
                   placeholder="••••••••" 
                   required 
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
                 <button 
                   type="button" 
@@ -184,8 +120,8 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="w-full bg-[#C69C6D] hover:bg-[#D4A373] disabled:opacity-50 text-white border-none p-4 rounded-full text-base font-semibold cursor-pointer font-sans transition-all duration-300 flex justify-center items-center gap-2 mt-3 shadow-[0_8px_20px_rgba(198,156,109,0.3)]">
-              <span>{loading ? 'Creating Account...' : 'Create Account'}</span>
+            <button type="submit" className="w-full bg-[#C69C6D] hover:bg-[#D4A373] text-white border-none p-4 rounded-full text-base font-semibold cursor-pointer font-sans transition-all duration-300 flex justify-center items-center gap-2 mt-3 shadow-[0_8px_20px_rgba(198,156,109,0.3)]">
+              <span>Create Account</span>
             </button>
           </form>
 
