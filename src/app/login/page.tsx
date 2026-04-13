@@ -26,18 +26,18 @@ export default function LoginPage() {
     setLoading(false);
 
     if (error) {
-      setErrorMsg('Gagal Login: ' + error.message);
+      setErrorMsg(error.message);
       return;
     }
 
-    // Set local storage for UI state locally alongside Supabase session
+    // Set local storage for UI stat
     localStorage.setItem('isLoggedIn', 'true');
-    const userName = data.user?.user_metadata?.full_name || email.split('@')[0];
+    const userName = data.user?.user_metadata?.full_name || email.split('@')[0] || 'User';
     localStorage.setItem('userName', userName);
     
-    // Redirect logic
+    // Redirect logic - langsung ke menu
     const params = new URLSearchParams(window.location.search);
-    const redirectUrl = params.get('redirect') || '/';
+    const redirectUrl = params.get('redirect') || '/menu';
     router.push(redirectUrl);
   };
 
@@ -90,11 +90,11 @@ export default function LoginPage() {
 
             <div className="mb-5">
               <label className="flex justify-between text-[0.85rem] font-semibold text-[#1B1B1B] mb-2" htmlFor="password">Password</label>
-              <div className="relative">
+              <div className="relative flex items-center">
                 <input 
                   type={showPassword ? "text" : "password"} 
                   id="password" 
-                  className="w-full bg-[#FAF3E0] border-2 border-transparent px-4 py-3.5 rounded-xl font-sans text-[0.95rem] text-[#1B1B1B] box-border transition-all duration-300 focus:outline-none focus:border-[#C69C6D] focus:bg-white placeholder-[#A0A0A0]" 
+                  className="w-full bg-[#FAF3E0] border-2 border-transparent px-4 py-3.5 pr-12 rounded-xl font-sans text-[0.95rem] text-[#1B1B1B] box-border transition-all duration-300 focus:outline-none focus:border-[#C69C6D] focus:bg-white placeholder-[#A0A0A0]" 
                   placeholder="••••••••" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -102,13 +102,23 @@ export default function LoginPage() {
                 />
                 <button 
                   type="button" 
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 bg-none border-none cursor-pointer text-[#6D6D6D] p-0 flex items-center transition-colors hover:text-[#1B1B1B]"
-                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 z-20 bg-transparent border-none cursor-pointer text-[#6D6D6D] p-2 flex items-center transition-colors hover:text-[#1B1B1B]"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowPassword(!showPassword);
+                  }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
+                  {showPassword ? (
+                    <svg className="pointer-events-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                  ) : (
+                    <svg className="pointer-events-none" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  )}
                 </button>
               </div>
             </div>

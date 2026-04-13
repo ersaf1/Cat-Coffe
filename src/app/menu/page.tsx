@@ -115,28 +115,20 @@ export default function MenuPage() {
   };
 
   const handleAddToCart = (item: { name: string; price: number; image?: string }) => {
-    // Selalu cek localStorage secara real-time untuk jaga-jaga
-    const loggedIn = typeof window !== 'undefined' && localStorage.getItem('isLoggedIn') === 'true';
-    
-    if (!loggedIn) {
-      setToastMessage('Silakan login terlebih dahulu');
-      if (toastTimeoutRef.current) {
-        clearTimeout(toastTimeoutRef.current);
-      }
-      toastTimeoutRef.current = setTimeout(() => {
-        setToastMessage(null);
-        router.push('/login?redirect=/menu');
-      }, 1500);
-      return;
-    }
-
     setCartItems(prev => {
       const existing = prev.find(i => i.name === item.name);
+      let updatedCart;
       if (existing) {
-        return prev.map(i => i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i);
+        updatedCart = prev.map(i => i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i);
+      } else {
+        updatedCart = [...prev, { name: item.name, price: item.price, image: item.image || '', quantity: 1 }];
       }
-      return [...prev, { name: item.name, price: item.price, image: item.image || '', quantity: 1 }];
+      
+      // Simpan keranjang ke localStorage supaya bisa dibaca walau belum login
+      localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+      return updatedCart;
     });
+
     setToastMessage(`${item.name} berhasil ditambahkan!`);
     if (toastTimeoutRef.current) {
       clearTimeout(toastTimeoutRef.current);
@@ -147,16 +139,32 @@ export default function MenuPage() {
   const decreaseQuantity = (name: string) => {
     setCartItems(prev => {
       const existing = prev.find(i => i.name === name);
+      let updatedCart;
       if (existing && existing.quantity > 1) {
-        return prev.map(i => i.name === name ? { ...i, quantity: i.quantity - 1 } : i);
+        updatedCart = prev.map(i => i.name === name ? { ...i, quantity: i.quantity - 1 } : i);
+      } else {
+        updatedCart = prev.filter(i => i.name !== name);
       }
-      return prev.filter(i => i.name !== name);
+      localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+      return updatedCart;
     });
   };
 
   const removeFromCart = (name: string) => {
-    setCartItems(prev => prev.filter(i => i.name !== name));
+    setCartItems(prev => {
+      const updatedCart = prev.filter(item => item.name !== name);
+      localStorage.setItem('guestCart', JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   };
+
+  // 1. Muat ulang keranjang dari localStorage pas buka menu
+  useEffect(() => {
+    const savedCart = localStorage.getItem('guestCart');
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
+    }
+  }, []);
 
   const cartTotalQty = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const cartTotalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
