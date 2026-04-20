@@ -11,11 +11,11 @@ const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-playfa
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 const PAYMENT_METHODS = [
-  { id: 'bca', name: 'BCA Virtual Account', icon: '🏦' },
-  { id: 'mandiri', name: 'Mandiri Virtual Account', icon: '🏦' },
-  { id: 'gopay', name: 'GoPay', icon: '📱' },
-  { id: 'dana', name: 'DANA', icon: '📱' },
-  { id: 'ovo', name: 'OVO', icon: '📱' }
+  { id: 'bca', name: 'BCA Virtual Account', icon: '??' },
+  { id: 'mandiri', name: 'Mandiri Virtual Account', icon: '??' },
+  { id: 'gopay', name: 'GoPay', icon: '??' },
+  { id: 'dana', name: 'DANA', icon: '??' },
+  { id: 'ovo', name: 'OVO', icon: '??' }
 ];
 
 export default function CheckoutPage() {
